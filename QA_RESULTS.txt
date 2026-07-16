@@ -1,0 +1,39 @@
+ME2 Trainer RC1 QA Results
+==========================
+
+Build Date: 2026-07-15
+
+Static Checks
+-------------
+OK: app.js JavaScript syntax
+OK: data/questions-me2.js JavaScript syntax
+OK: data/academic-categories.js JavaScript syntax
+OK: question count = 960
+OK: image references = 233
+OK: missing image files = 0
+OK: invalid choice count = 0
+OK: academicCategories missing = 0
+
+Manual/Functional Checklist
+---------------------------
+Not fully manually verified in this packaging step:
+- 起動
+- 問題表示
+- 画像表示
+- 正答判定
+- 検索/出題設定
+- 学習履歴
+- 問題編集
+- 印刷
+
+Browser Check
+-------------
+Chrome executable detected.
+Chrome headless check could not complete because the local Chrome GPU process failed in this environment.
+Edge executable was not detected in the standard install paths on this machine.
+
+Recommended Student Test
+------------------------
+1. ZIPを展開する。
+2. ChromeまたはEdgeで index.html を開く。
+3. 問題表示、画像表示、判定、印刷を確認する。

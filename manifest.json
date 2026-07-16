@@ -1,0 +1,10 @@
+{
+  "name": "ME2 Trainer",
+  "short_name": "ME2 Trainer",
+  "version": "0.9.0-rc1",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#0f766e",
+  "description": "ME2 exam practice trainer release candidate."
+}
