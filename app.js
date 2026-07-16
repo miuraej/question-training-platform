@@ -866,7 +866,11 @@ function saveSettingsPresets() {
 }
 
 function getPreset(name) {
-  return settingsPresets[name] || null;
+  return settingsPresets[name] || bundledSettingsPresets[name] || null;
+}
+
+function isUserPreset(name) {
+  return Object.prototype.hasOwnProperty.call(settingsPresets, name);
 }
 
 function cloneSectionConfigs() {
@@ -889,11 +893,19 @@ function renderPresetSelect() {
   const selected = elements.presetSelect.value;
   elements.presetSelect.innerHTML = `<option value="">保存した設定</option>`;
 
+  const bundledNames = Object.keys(bundledSettingsPresets).sort((a, b) => a.localeCompare(b, "ja"));
+  bundledNames.forEach((name) => {
+    const option = document.createElement("option");
+    option.value = name;
+    option.textContent = name;
+    elements.presetSelect.appendChild(option);
+  });
+
   const savedNames = Object.keys(settingsPresets).sort((a, b) => a.localeCompare(b, "ja"));
   savedNames.forEach((name) => {
     const option = document.createElement("option");
     option.value = name;
-    option.textContent = name;
+    option.textContent = bundledSettingsPresets[name] ? `${name}（保存済み）` : name;
     elements.presetSelect.appendChild(option);
   });
 
@@ -936,7 +948,10 @@ function loadPreset(name = elements.presetSelect.value) {
 function deleteSelectedPreset() {
   const name = elements.presetSelect.value;
   if (!name) return;
-  if (!settingsPresets[name]) return;
+  if (!isUserPreset(name)) {
+    alert("同梱されている設定は削除できません。");
+    return;
+  }
   if (!confirm(`「${name}」を削除しますか。`)) return;
   delete settingsPresets[name];
   saveSettingsPresets();
@@ -2270,11 +2285,84 @@ function renderQuestions() {
   renderSummary();
 }
 
+const mobilePanelMedia = window.matchMedia("(max-width: 700px)");
+const mobilePanelState = {
+  sectionBuilder: false,
+  learningDataPanel: false
+};
+const mobileLearningDataHome = {
+  parent: null,
+  nextSibling: null
+};
+
+function setMobilePanelOpen(panelId, open) {
+  const panel = document.getElementById(panelId);
+  const toggle = document.querySelector(`[data-mobile-toggle="${panelId}"]`);
+  if (!panel || !toggle) return;
+  mobilePanelState[panelId] = open;
+  panel.classList.toggle("mobile-collapsed", !open);
+  if (panelId === "sectionBuilder") {
+    document.body.classList.toggle("mobile-section-settings-open", open);
+  }
+  toggle.setAttribute("aria-expanded", String(open));
+  toggle.textContent = panelId === "sectionBuilder"
+    ? (open ? "問題設定をたたむ" : "問題設定を開く")
+    : (open ? "学習データをたたむ" : "学習データを開く");
+}
+
+function updateMobilePanelLayout() {
+  const learningPanel = document.getElementById("learningDataPanel");
+  const learningToggle = document.querySelector('[data-mobile-toggle="learningDataPanel"]');
+  const toolbar = document.querySelector(".toolbar");
+  const controls = document.querySelector(".controls");
+
+  if (learningPanel && !mobileLearningDataHome.parent) {
+    mobileLearningDataHome.parent = learningPanel.parentNode;
+    mobileLearningDataHome.nextSibling = learningPanel.nextSibling;
+  }
+
+  if (mobilePanelMedia.matches) {
+    document.body.classList.add("mobile-display-mode");
+    setMobilePanelOpen("sectionBuilder", mobilePanelState.sectionBuilder);
+    setMobilePanelOpen("learningDataPanel", mobilePanelState.learningDataPanel);
+    if (toolbar && learningToggle && learningPanel && learningPanel.parentNode !== toolbar.parentNode) {
+      toolbar.after(learningToggle, learningPanel);
+    }
+    return;
+  }
+
+  document.body.classList.remove("mobile-display-mode");
+  document.body.classList.remove("mobile-section-settings-open");
+  document.querySelectorAll(".mobile-collapsible").forEach((panel) => panel.classList.remove("mobile-collapsed"));
+  document.querySelectorAll(".mobile-panel-toggle").forEach((toggle) => {
+    toggle.setAttribute("aria-expanded", "true");
+  });
+  if (controls && learningToggle && learningPanel && learningPanel.parentNode !== controls) {
+    if (mobileLearningDataHome.nextSibling && mobileLearningDataHome.nextSibling.parentNode === controls) {
+      controls.insertBefore(learningToggle, mobileLearningDataHome.nextSibling);
+      controls.insertBefore(learningPanel, mobileLearningDataHome.nextSibling);
+    } else {
+      controls.append(learningToggle, learningPanel);
+    }
+  }
+}
+
+function setupMobilePanels() {
+  document.querySelectorAll(".mobile-panel-toggle").forEach((toggle) => {
+    const panelId = toggle.dataset.mobileToggle;
+    if (!panelId) return;
+    toggle.addEventListener("click", () => setMobilePanelOpen(panelId, !mobilePanelState[panelId]));
+  });
+  updateMobilePanelLayout();
+  mobilePanelMedia.addEventListener?.("change", updateMobilePanelLayout);
+}
+
 function boot() {
   loadInitialSections();
   renderPresetSelect();
   updateAdminModeUI();
   setupAdminDataTools();
+  setupMobilePanels();
   setQuestionIdCsvOpen(Boolean(elements.questionIdCsv.value.trim()));
 
   elements.adminModeToggle?.addEventListener("click", () => {

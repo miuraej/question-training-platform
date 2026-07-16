@@ -13,15 +13,6 @@
   font-family: "Yu Gothic", "Meiryo", system-ui, sans-serif;
 }
 
-.release-info {
-  max-width: 1180px;
-  margin: 0 auto 18px;
-  padding: 0 18px;
-  color: var(--muted);
-  font-size: 0.78rem;
-  text-align: right;
-}
-
 * {
   box-sizing: border-box;
 }
@@ -124,6 +115,20 @@ h1 {
 
 .admin-data-button:hover {
   background: rgba(255, 255, 255, 0.16);
+}
+
+.mobile-panel-toggle {
+  display: none;
+}
+
+.learning-data-panel {
+  display: grid;
+  gap: 10px;
+}
+
+body:not(.admin-mode) #exportExplanationsButton,
+body:not(.admin-mode) #importExplanationsButton {
+  display: none !important;
 }
 
 .layout {
@@ -1179,6 +1184,194 @@ body.exam-mode .exam-timer {
   .question-images img {
     max-width: 100%;
     max-height: 58vh;
+  }
+}
+
+@media (max-width: 760px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-size: 16px;
+  }
+
+  body:not(.admin-mode) .admin-mode-toggle,
+  body:not(.admin-mode) .admin-data-tools,
+  body:not(.admin-mode) .question-edit-button,
+  body:not(.admin-mode) .admin-edit-panel,
+  body:not(.admin-mode) .admin-review {
+    display: none !important;
+  }
+
+  .app-header {
+    padding: 16px 12px;
+  }
+
+  .app-header h1,
+  .app-header .eyebrow {
+    display: none;
+  }
+
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 8px;
+  }
+
+  .summary span {
+    min-width: 0;
+    min-height: 58px;
+    display: grid;
+    place-items: center;
+    padding: 8px 10px;
+  }
+
+  .layout {
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    gap: 12px;
+  }
+
+  .controls,
+  .question-card,
+  .panel {
+    border-radius: 8px;
+    box-shadow: none;
+  }
+
+  .mobile-panel-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .mobile-collapsible.mobile-collapsed {
+    display: none !important;
+  }
+
+  body.mobile-display-mode #sectionBuilder.mobile-collapsed {
+    display: block !important;
+  }
+
+  body.mobile-display-mode #sectionBuilder.mobile-collapsed .preset-tools {
+    display: block;
+  }
+
+  body.mobile-display-mode #sectionBuilder.mobile-collapsed .section-builder-head,
+  body.mobile-display-mode #sectionBuilder.mobile-collapsed .csv-tools,
+  body.mobile-display-mode #sectionBuilder.mobile-collapsed .preset-save-row,
+  body.mobile-display-mode #sectionBuilder.mobile-collapsed .section-list,
+  body.mobile-display-mode #sectionBuilder.mobile-collapsed .add-section-button,
+  body.mobile-display-mode #sectionBuilder.mobile-collapsed #sectionStartButton {
+    display: none !important;
+  }
+
+  body.mobile-display-mode.mobile-section-settings-open #sectionBuilder .section-builder-head {
+    display: flex;
+  }
+
+  body.mobile-display-mode.mobile-section-settings-open #sectionBuilder .csv-tools,
+  body.mobile-display-mode.mobile-section-settings-open #sectionBuilder .preset-save-row,
+  body.mobile-display-mode.mobile-section-settings-open #sectionBuilder .section-list,
+  body.mobile-display-mode.mobile-section-settings-open #sectionBuilder .add-section-button,
+  body.mobile-display-mode.mobile-section-settings-open #sectionBuilder #sectionStartButton {
+    display: grid;
+  }
+
+  body.mobile-display-mode.mobile-section-settings-open .status-control,
+  body.mobile-display-mode.mobile-section-settings-open .exam-name-control,
+  body.mobile-display-mode.mobile-section-settings-open .exam-minutes-control {
+    display: grid;
+  }
+
+  body.mobile-display-mode.mobile-section-settings-open .controls > .check-control {
+    display: flex;
+  }
+
+  .preset-save-row,
+  .preset-actions,
+  .data-export-actions,
+  .toolbar-actions,
+  .answer-form,
+  .card-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .preset-actions #deletePresetButton,
+  .print-options {
+    display: none !important;
+  }
+
+  .data-export-actions {
+    gap: 8px;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  button,
+  .primary-button,
+  .ghost-button,
+  .check-answer,
+  .show-answer,
+  .mark-correct,
+  .mark-review,
+  .retry-question {
+    min-height: 44px;
+    width: 100%;
+  }
+
+  .check-control {
+    min-height: 44px;
+  }
+
+  .toolbar {
+    margin-top: 12px;
+  }
+
+  .question-card {
+    padding: 14px;
+  }
+
+  .question-text,
+  .choice-text {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .choices {
+    padding-left: 0;
+  }
+
+  .choices li {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .question-images img,
+  .choice-image {
+    max-width: 100%;
+    height: auto;
   }
 }
 

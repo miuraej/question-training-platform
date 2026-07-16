@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ME・臨床工学 過去問トレーニング</title>
     <link rel="stylesheet" href="styles.css?v=20260713-admin-edit" />
-    <link rel="manifest" href="manifest.json" />
   </head>
   <body>
     <header class="app-header">
@@ -22,7 +21,8 @@
 
     <main class="layout">
       <aside class="panel controls" aria-label="検索条件">
-        <div class="section-builder" aria-label="出題設定">
+        <button class="mobile-panel-toggle" type="button" data-mobile-toggle="sectionBuilder" aria-expanded="false">問題設定を開く</button>
+        <div id="sectionBuilder" class="section-builder mobile-collapsible" aria-label="出題設定">
           <div class="section-builder-head">
             <strong>出題設定</strong>
           </div>
@@ -98,19 +98,22 @@
           <input id="examMinutes" type="number" min="0" step="1" placeholder="例: 60" />
         </label>
 
-        <div class="data-export" aria-label="学習データ出力">
-          <strong>学習データ</strong>
-          <div class="data-export-actions">
-            <button id="exportProgressJsonButton" class="ghost-button" type="button">JSON</button>
-            <button id="exportProgressCsvButton" class="ghost-button" type="button">CSV</button>
-            <button id="exportProgressTextButton" class="ghost-button" type="button">テキスト</button>
-            <button id="showProgressReportButton" class="ghost-button" type="button">結果表示</button>
-            <button id="exportExplanationsButton" class="ghost-button" type="button">解説JSON</button>
-            <button id="importExplanationsButton" class="ghost-button" type="button">解説取込</button>
+        <button class="mobile-panel-toggle" type="button" data-mobile-toggle="learningDataPanel" aria-expanded="false">学習データを開く</button>
+        <div id="learningDataPanel" class="learning-data-panel mobile-collapsible">
+          <div class="data-export" aria-label="学習データ出力">
+            <strong>学習データ</strong>
+            <div class="data-export-actions">
+              <button id="exportProgressJsonButton" class="ghost-button" type="button">JSON</button>
+              <button id="exportProgressCsvButton" class="ghost-button" type="button">CSV</button>
+              <button id="exportProgressTextButton" class="ghost-button" type="button">テキスト</button>
+              <button id="showProgressReportButton" class="ghost-button" type="button">結果表示</button>
+              <button id="exportExplanationsButton" class="ghost-button" type="button">解説JSON</button>
+              <button id="importExplanationsButton" class="ghost-button" type="button">解説取込</button>
+            </div>
+            <input id="importExplanationsFile" type="file" accept="application/json,.json" hidden />
           </div>
-          <input id="importExplanationsFile" type="file" accept="application/json,.json" hidden />
+          <button id="resetButton" class="ghost-button" type="button">記録をリセット</button>
         </div>
-        <button id="resetButton" class="ghost-button" type="button">記録をリセット</button>
 
         <div class="print-options" aria-label="印刷設定">
           <strong>印刷に含める内容</strong>
@@ -182,12 +185,8 @@
       </article>
     </template>
 
-    <footer class="release-info" aria-label="バージョン情報">
-      ME2 Trainer RC1 / Application Version 0.9.0-rc1 / Database Version ME2-QuestionDatabase v1.1 / Build Date 2026-07-15
-    </footer>
-
-    <script src="data/academic-categories.js?v=20260715-rc1"></script>
-    <script src="data/questions-me2.js?v=20260715-rc1"></script>
-    <script src="app.js?v=20260715-rc1"></script>
+    <script src="data/academic-categories.js?v=20260714-phase2-academic"></script>
+    <script src="data/questions-me2.js?v=20260706-me2-40-q30-italic"></script>
+    <script src="app.js?v=20260713-admin-edit-export-confirm"></script>
   </body>
 </html>
