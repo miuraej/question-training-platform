@@ -1,2 +1,2 @@
-﻿Release/
-*.zip
+﻿Release/*
+!Release/*.zip
