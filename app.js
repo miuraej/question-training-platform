@@ -257,6 +257,7 @@ const elements = {
   examSummary: document.querySelector("#examSummary"),
   pauseExam: document.querySelector("#pauseExamButton"),
   stopExam: document.querySelector("#stopExamButton"),
+  stopExamBottom: document.querySelector("#stopExamBottomButton"),
   shuffleChoices: document.querySelector("#shuffleChoices"),
   shuffleQuestions: document.querySelector("#shuffleQuestions"),
   printIncludeFilters: document.querySelector("#printIncludeFilters"),
@@ -298,8 +299,8 @@ const bundledSettingsPresets = {
     ],
     questionIdCsv: "",
     status: "all",
-    shuffleChoices: false,
-    shuffleQuestions: false,
+    shuffleChoices: true,
+    shuffleQuestions: true,
     examName: "ME2種 10問トライアル",
     examMinutes: ""
   },
@@ -319,8 +320,8 @@ const bundledSettingsPresets = {
     ],
     questionIdCsv: "",
     status: "all",
-    shuffleChoices: false,
-    shuffleQuestions: false,
+    shuffleChoices: true,
+    shuffleQuestions: true,
     examName: "ME2種 60問模擬",
     examMinutes: "120"
   },
@@ -340,8 +341,8 @@ const bundledSettingsPresets = {
     ],
     questionIdCsv: "",
     status: "all",
-    shuffleChoices: false,
-    shuffleQuestions: false,
+    shuffleChoices: true,
+    shuffleQuestions: true,
     examName: "午前 30問",
     examMinutes: ""
   },
@@ -361,8 +362,8 @@ const bundledSettingsPresets = {
     ],
     questionIdCsv: "",
     status: "all",
-    shuffleChoices: false,
-    shuffleQuestions: false,
+    shuffleChoices: true,
+    shuffleQuestions: true,
     examName: "午後 30問",
     examMinutes: ""
   },
@@ -382,8 +383,8 @@ const bundledSettingsPresets = {
     ],
     questionIdCsv: "",
     status: "all",
-    shuffleChoices: false,
-    shuffleQuestions: false,
+    shuffleChoices: true,
+    shuffleQuestions: true,
     examName: "医学基礎 10問",
     examMinutes: ""
   },
@@ -403,8 +404,8 @@ const bundledSettingsPresets = {
     ],
     questionIdCsv: "",
     status: "all",
-    shuffleChoices: false,
-    shuffleQuestions: false,
+    shuffleChoices: true,
+    shuffleQuestions: true,
     examName: "基礎工学 10問",
     examMinutes: ""
   },
@@ -424,8 +425,8 @@ const bundledSettingsPresets = {
     ],
     questionIdCsv: "",
     status: "all",
-    shuffleChoices: false,
-    shuffleQuestions: false,
+    shuffleChoices: true,
+    shuffleQuestions: true,
     examName: "基礎ME 10問",
     examMinutes: ""
   },
@@ -445,8 +446,8 @@ const bundledSettingsPresets = {
     ],
     questionIdCsv: "",
     status: "all",
-    shuffleChoices: false,
-    shuffleQuestions: false,
+    shuffleChoices: true,
+    shuffleQuestions: true,
     examName: "保守安全 10問",
     examMinutes: ""
   }
@@ -1423,6 +1424,7 @@ function enterExamMode() {
   document.body.classList.add("exam-mode");
   elements.pauseExam.hidden = false;
   elements.stopExam.hidden = false;
+  elements.stopExamBottom.hidden = false;
   elements.newSet.hidden = true;
   elements.pauseExam.textContent = "中断";
   startExamTimer();
@@ -1505,6 +1507,7 @@ function stopExamMode(options = {}) {
   elements.examTimer.textContent = "";
   elements.pauseExam.hidden = true;
   elements.stopExam.hidden = true;
+  elements.stopExamBottom.hidden = true;
   elements.newSet.hidden = false;
   elements.pauseExam.textContent = "中断";
   elements.stopExam.textContent = "終了して結果を見る";
@@ -2375,6 +2378,7 @@ function boot() {
   elements.newSet.addEventListener("click", startExamMode);
   elements.pauseExam.addEventListener("click", pauseExamMode);
   elements.stopExam.addEventListener("click", () => stopExamMode({ showSummary: true }));
+  elements.stopExamBottom.addEventListener("click", () => stopExamMode({ showSummary: true }));
   elements.print.addEventListener("click", () => {
     updatePrintOptions();
     window.print();

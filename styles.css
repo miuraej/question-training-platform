@@ -624,6 +624,18 @@ body.exam-mode .exam-timer {
   display: none;
 }
 
+.exam-bottom-control {
+  display: none;
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px 18px;
+}
+
+body.exam-mode .exam-bottom-control {
+  display: block;
+}
+
+
 .exam-summary-panel {
   margin-bottom: 14px;
   padding: 16px;
