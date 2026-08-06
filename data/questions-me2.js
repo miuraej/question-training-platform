@@ -21084,7 +21084,7 @@ window.questionBank = [
     "session": "午前",
     "number": 48,
     "category": "操作運用",
-    "question": "CO レーザ手術装置で正しいのはどれか。\n2",
+    "question": "CO₂レーザ手術装置で正しいのはどれか。",
     "choices": [
       "照射部位周辺の保護には濡れたガーゼを用いる。",
       "導光路は石英ガラスファイバである。",
