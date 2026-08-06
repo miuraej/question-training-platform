@@ -708,6 +708,70 @@ body.exam-mode .exam-bottom-control {
   gap: 14px;
 }
 
+.question-selection-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border: 1px solid #b7d8d5;
+  border-radius: 12px;
+  background: #f0fdfa;
+}
+
+.question-selection-tools[hidden] {
+  display: none;
+}
+
+.question-selection-tools > div:first-child {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.question-selection-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.question-selection-control {
+  display: none;
+  align-items: center;
+  gap: 7px;
+  min-height: 32px;
+  padding: 5px 10px;
+  border: 1px solid #94a3b8;
+  border-radius: 999px;
+  background: #fff;
+  color: #334155;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.question-selection-mode .question-selection-control {
+  display: inline-flex;
+}
+
+.question-selection-control.selected {
+  border-color: #0f766e;
+  background: #ccfbf1;
+  color: #115e59;
+}
+
+.selectable-question:has(.question-selection-control.selected) {
+  outline: 2px solid #5eead4;
+  outline-offset: -2px;
+}
+
+@media (max-width: 760px) {
+  .question-selection-tools {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
 .question-card {
   padding: 20px;
 }

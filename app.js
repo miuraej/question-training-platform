@@ -213,6 +213,7 @@ const settingsPresetStorageKey = "meClinicalExamSettingPresets.v2";
 const explanationStorageKey = "meClinicalExamExplanations";
 const questionEditStorageKey = "meClinicalExamQuestionEdits.v1";
 const adminModeStorageKey = "meClinicalExamAdminMode";
+const selectedQuestionStorageKey = "meClinicalExamSelectedQuestions.v1";
 const questionEditImportVersion = 1;
 const academicCategoryOptions = Array.isArray(window.academicCategoryOptions)
   ? window.academicCategoryOptions
@@ -222,6 +223,8 @@ let settingsPresets = JSON.parse(localStorage.getItem(settingsPresetStorageKey) 
 let explanationData = JSON.parse(localStorage.getItem(explanationStorageKey) || "{}");
 let questionEdits = JSON.parse(localStorage.getItem(questionEditStorageKey) || "{}");
 let adminMode = localStorage.getItem(adminModeStorageKey) === "true";
+let selectedQuestionIds = new Set(JSON.parse(localStorage.getItem(selectedQuestionStorageKey) || "[]"));
+let questionSelectionMode = false;
 let currentQuestionIds = [];
 let choiceOrderByQuestion = {};
 let editingQuestionId = "";
@@ -243,6 +246,12 @@ const elements = {
   toggleQuestionIdCsv: document.querySelector("#toggleQuestionIdCsvButton"),
   questionIdCsv: document.querySelector("#questionIdCsvInput"),
   clearQuestionIdCsv: document.querySelector("#clearQuestionIdCsvButton"),
+  questionSelectionTools: document.querySelector("#questionSelectionTools"),
+  selectedQuestionCount: document.querySelector("#selectedQuestionCount"),
+  toggleQuestionSelection: document.querySelector("#toggleQuestionSelectionButton"),
+  selectVisibleQuestions: document.querySelector("#selectVisibleQuestionsButton"),
+  clearSelectedQuestions: document.querySelector("#clearSelectedQuestionsButton"),
+  exportSelectedQuestions: document.querySelector("#exportSelectedQuestionsButton"),
   list: document.querySelector("#questionList"),
   template: document.querySelector("#questionTemplate"),
   doneCount: document.querySelector("#doneCount"),
@@ -556,6 +565,55 @@ function updateAdminModeUI() {
   document.querySelectorAll(".admin-data-tools").forEach((node) => {
     node.hidden = !adminMode;
   });
+  if (!adminMode) questionSelectionMode = false;
+  updateQuestionSelectionUI();
+}
+
+function saveSelectedQuestionIds() {
+  localStorage.setItem(selectedQuestionStorageKey, JSON.stringify([...selectedQuestionIds]));
+}
+
+function updateQuestionSelectionUI() {
+  const count = selectedQuestionIds.size;
+  elements.selectedQuestionCount.textContent = `${count}問選択中`;
+  elements.toggleQuestionSelection.textContent = questionSelectionMode ? "選定を終了" : "選定を開始";
+  elements.toggleQuestionSelection.setAttribute("aria-pressed", String(questionSelectionMode));
+  elements.selectVisibleQuestions.disabled = !questionSelectionMode;
+  elements.clearSelectedQuestions.disabled = count === 0;
+  elements.exportSelectedQuestions.disabled = count === 0;
+  document.body.classList.toggle("question-selection-mode", adminMode && questionSelectionMode);
+}
+
+function selectedQuestionExportFilename() {
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  return `me2-selected-question-ids-${date}.csv`;
+}
+
+function exportSelectedQuestionIds() {
+  const ids = questions.filter((question) => selectedQuestionIds.has(question.id)).map((question) => question.id);
+  if (!ids.length) return;
+  downloadFile(selectedQuestionExportFilename(), `\uFEFF${ids.join(",")}`, "text/csv;charset=utf-8");
+}
+
+function createQuestionSelectionControl(question) {
+  const label = document.createElement("label");
+  label.className = "question-selection-control";
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = selectedQuestionIds.has(question.id);
+  checkbox.setAttribute("aria-label", `${question.examRound} ${question.session} 問題${question.number}を採用`);
+  checkbox.addEventListener("change", () => {
+    if (checkbox.checked) selectedQuestionIds.add(question.id);
+    else selectedQuestionIds.delete(question.id);
+    saveSelectedQuestionIds();
+    updateQuestionSelectionUI();
+    label.classList.toggle("selected", checkbox.checked);
+  });
+  const text = document.createElement("span");
+  text.textContent = "採用";
+  label.classList.toggle("selected", checkbox.checked);
+  label.append(checkbox, text);
+  return label;
 }
 
 applyQuestionEditsToQuestions();
@@ -2116,6 +2174,11 @@ function renderQuestions() {
     node.classList.toggle("compact-choice-images", question.choiceImageLayout === "compact-grid");
     const meta = node.querySelector(".question-meta");
 
+    if (adminMode && questionSelectionMode) {
+      node.classList.add("selectable-question");
+      meta.appendChild(createQuestionSelectionControl(question));
+    }
+
     [
       examShortLabel(question),
       question.subject,
@@ -2399,6 +2462,25 @@ function boot() {
   elements.updateQuestionIdCsv.addEventListener("click", startSectionSet);
   elements.toggleQuestionIdCsv.addEventListener("click", toggleQuestionIdCsv);
   elements.clearQuestionIdCsv.addEventListener("click", clearQuestionIdCsv);
+  elements.toggleQuestionSelection.addEventListener("click", () => {
+    questionSelectionMode = !questionSelectionMode;
+    updateQuestionSelectionUI();
+    renderQuestions();
+  });
+  elements.selectVisibleQuestions.addEventListener("click", () => {
+    getCurrentQuestions().forEach((question) => selectedQuestionIds.add(question.id));
+    saveSelectedQuestionIds();
+    updateQuestionSelectionUI();
+    renderQuestions();
+  });
+  elements.clearSelectedQuestions.addEventListener("click", () => {
+    if (!selectedQuestionIds.size || !confirm("選択した問題をすべて解除しますか？")) return;
+    selectedQuestionIds.clear();
+    saveSelectedQuestionIds();
+    updateQuestionSelectionUI();
+    renderQuestions();
+  });
+  elements.exportSelectedQuestions.addEventListener("click", exportSelectedQuestionIds);
   elements.presetSelect.addEventListener("change", () => {
     elements.presetName.value = elements.presetSelect.value;
   });

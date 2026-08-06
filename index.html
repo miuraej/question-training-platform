@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ME・臨床工学 過去問トレーニング</title>
-    <link rel="stylesheet" href="styles.css?v=20260713-admin-edit" />
+    <link rel="stylesheet" href="styles.css?v=20260806-question-selection" />
   </head>
   <body>
     <header class="app-header">
@@ -155,6 +155,18 @@
             <button id="newSetButton" class="primary-button" type="button">試験開始</button>
           </div>
         </div>
+        <div id="questionSelectionTools" class="question-selection-tools admin-data-tools" hidden>
+          <div>
+            <strong>問題選定</strong>
+            <span id="selectedQuestionCount" aria-live="polite">0問選択中</span>
+          </div>
+          <div class="question-selection-actions">
+            <button id="toggleQuestionSelectionButton" class="ghost-button" type="button" aria-pressed="false">選定を開始</button>
+            <button id="selectVisibleQuestionsButton" class="ghost-button" type="button" disabled>表示中を全選択</button>
+            <button id="clearSelectedQuestionsButton" class="ghost-button" type="button" disabled>選択をクリア</button>
+            <button id="exportSelectedQuestionsButton" class="primary-button" type="button" disabled>選択IDをCSV出力</button>
+          </div>
+        </div>
         <div id="examSummary" class="exam-summary-panel" hidden></div>
         <div id="questionList" class="question-list"></div>
         <button id="stopExamBottomButton" class="ghost-button exam-control exam-bottom-control" type="button" hidden>終了して結果を見る</button>
@@ -188,6 +200,6 @@
 
     <script src="data/academic-categories.js?v=20260714-phase2-academic"></script>
     <script src="data/questions-me2.js?v=20260706-me2-40-q30-italic"></script>
-    <script src="app.js?v=20260713-admin-edit-export-confirm"></script>
+    <script src="app.js?v=20260806-question-selection"></script>
   </body>
 </html>
